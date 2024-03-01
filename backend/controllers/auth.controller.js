@@ -46,8 +46,8 @@ export const login =async(req,res)=>{
     console.log(req.body);
     const {userName,password}=req.body
     const user =await User.findOne({userName:userName})
-    const isPasswordMath =await bcrypt.compare(password,user?.password ||"")
-    if(!user ||!isPasswordMath){
+    const isPasswordMathc =await bcrypt.compare(password,user?.password ||"")
+    if(!user ||!isPasswordMathc){
       res.status(400).json({error:'username or password is incorrect'})
     }
     generateTokenAndSetCookie(user._id,res)
