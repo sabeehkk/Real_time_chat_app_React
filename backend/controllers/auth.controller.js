@@ -29,39 +29,71 @@ export const signup =async (req,res)=>{
       if(newUser){
          generateTokenAndSetCookie(newUser._id,res)
         await newUser.save()
-        res.status(200).json({_id:newUser._id,
+        res.status(200).json({_id:newUser._id, 
         fullName:newUser.fullName,
         userName:newUser.userName,
         profilePic:newUser.profilePic})
       }else{
         res.status(400).json({error:"invalid userdata"})
-      }
+      } 
    } catch (error) {
     console.log(error.message,'eror signup');
     return res.status(500).json({error:'internal server error'})
    }
 }
-export const login =async(req,res)=>{
+
+export const login = async (req, res) => {
   try {
     console.log(req.body);
-    const {userName,password}=req.body
-    const user =await User.findOne({userName:userName})
-    const isPasswordMathc =await bcrypt.compare(password,user?.password ||"")
-    if(!user ||!isPasswordMathc){
-      res.status(400).json({error:'username or password is incorrect'})
+    const { username, password } = req.body;
+    const user = await User.findOne({ userName: username });
+    console.log(user, 'username');
+    const isPasswordMatch = await bcrypt.compare(
+      password,
+      user?.password || ''
+    );
+    if (!user || !isPasswordMatch) {
+      return res
+        .status(400)
+        .json({ error: 'username or password is incorrect' });
     }
-    generateTokenAndSetCookie(user._id,res)
-    res.status(200).json({_id:user._id,
-    fullName:user.fullName,
-    userName:user.userName,
-    profilePic:user.profilePic
-  });
-    console.log(isPasswordMath,'sssssssss');
+    generateTokenAndSetCookie(user._id, res);
+    return res.status(200).json({
+      _id: user._id,
+      fullName: user.fullName,
+      userName: user.userName,
+      profilePic: user.profilePic,
+    });
+
+    // The following line is unreachable, so it's commented out.
+    // console.log(isPasswordMath, 'sssssssss');
   } catch (error) {
-    console.log(error.message,'errrrrrrrrrrrrr');
-    res.status(500).json({error:'internal server error'})
+    console.log(error.message, 'errrrrrrrrrrrrr');
+    return res.status(500).json({ error: 'internal server error' });
   }
-}
+};
+
+// export const login =async(req,res)=>{
+//   try {
+//     console.log(req.body);
+//     const {username,password}=req.body
+//     const user =await User.findOne({userName:username})
+//     console.log(user,'username');
+//     const isPasswordMatch =await bcrypt.compare(password,user?.password || "")
+//     if(!user ||!isPasswordMatch){
+//      return res.status(400).json({error:'username or password is incorrects'})
+//     }
+//     generateTokenAndSetCookie(user._id,res)
+//     res.status(200).json({_id:user._id, 
+//     fullName:user.fullName,
+//     userName:user.userName, 
+//     profilePic:user.profilePic
+//   });
+//   } catch (error) {
+//     console.log(error.message,'errrrrrrrrrrrrr'); 
+//    return res.status(500).json({error:'internal server error'})
+//   }
+// }
 
 export const logout =(req,res)=>{
     console.log('logout');
@@ -70,6 +102,6 @@ export const logout =(req,res)=>{
       res.status(200).json({message:'logout successful'})
     } catch (error) {
       console.log(error.message,'erologout');
-      res.status(500).json({error:'internal server error'})
+      res.status(500).json({error:'internal server error'})  
     }
 } 

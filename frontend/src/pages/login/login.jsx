@@ -6,7 +6,7 @@ const Login = () => {
     const [username,setUsername]=useState("")
     const [password,setPassword]=useState("");
 
-     const {loading,login}=UseLogin()
+     const {loading,login }=UseLogin()
 
     const handleSubmit=async(e)=>{
         e.preventDefault()
