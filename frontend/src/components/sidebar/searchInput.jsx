@@ -1,8 +1,33 @@
+import { useState } from "react";
 import { FaSearch } from "react-icons/fa";
+import UseConversation from "../../zustand/useConversation";
+import UseGetConversations from "../../hooks/useGetConversations";
+import toast from "react-hot-toast";
 function SearchInput() {
+
+  const [search,setSearch]=useState("")
+  const {setSelectedConversation}=UseConversation()
+  const {conversations}= UseGetConversations()
+  const handleSubmit=(e)=>{
+      e.preventDefault()
+      if(!search)return
+      if(search.length<3){
+        toast.error("search must be at least 3 characters")
+      }
+      const conversation =conversations.find((c)=>c.fullName.toLowerCase().includes(search.toLowerCase()));
+      if(conversation){
+        setSelectedConversation(conversation)
+        setSearch('')
+      }else{
+        toast.error("No such user found!")
+      }
+  }
   return (
-    <form className="flex items-center gap-2 ">
-        <input type="text" placeholder="Search..." className="input input-bordered rounded-full"/>
+    <form className="flex items-center gap-2 " onSubmit={handleSubmit}>
+        <input type="text" placeholder="Search..." className="input input-bordered rounded-full"
+         value={search}
+         onChange={(e)=>setSearch(e.target.value)}
+        />
         <button type="submit" className="btn btn-circle bg-sky-500 text-white border-none">
             <FaSearch className="w-4 h-4 outline-none"/>
             </button>

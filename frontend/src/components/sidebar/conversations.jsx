@@ -5,7 +5,7 @@ import Conversation from "./conversation";
 
 function Conversations() {
   const { loading, conversations } = UseGetConversations();
-  console.log(conversations, 'conversations');
+  // console.log(conversations, 'conversations');
   
   return (
     <div className="py-2 flex flex-col overflow-auto">
@@ -17,7 +17,7 @@ function Conversations() {
           lastIdx={idx === conversations.length - 1}
         />
       ))}
-      {loading ? <span className="loading loading-spinner"></span> : null}
+      {loading ? <span className="loading loading-spinner mx-auto"></span> : null}
     </div>
   );
 }
